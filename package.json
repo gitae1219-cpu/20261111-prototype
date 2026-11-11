@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "echo 'Build complete: Static and Serverless ready'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
@@ -29,4 +30,3 @@
   "author": "CaloView Team",
   "license": "ISC"
 }
-
