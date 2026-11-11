@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="salad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14281d"/>
+      <stop offset="100%" stop-color="#0b1710"/>
+    </linearGradient>
+    <radialGradient id="salad-bowl" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="90%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#salad-bg)"/>
+  <ellipse cx="200" cy="165" rx="150" ry="95" fill="#000000" opacity="0.3"/>
+  <ellipse cx="200" cy="155" rx="145" ry="90" fill="url(#salad-bowl)"/>
+  <ellipse cx="200" cy="155" rx="120" ry="72" fill="#15803d" opacity="0.85"/>
+
+  <!-- 신선한 채소 잎들 -->
+  <path d="M 120,140 Q 140,110 170,135 Q 150,165 120,140 Z" fill="#22c55e"/>
+  <path d="M 230,130 Q 260,115 270,145 Q 240,170 230,130 Z" fill="#16a34a"/>
+  <path d="M 170,150 Q 200,120 220,150 Q 190,175 170,150 Z" fill="#4ade80"/>
+
+  <!-- 방울토마토 -->
+  <circle cx="150" cy="130" r="14" fill="#ef4444"/>
+  <circle cx="147" cy="126" r="3" fill="#ffffff" opacity="0.6"/>
+  <circle cx="245" cy="160" r="13" fill="#dc2626"/>
+  <circle cx="242" cy="157" r="2.5" fill="#ffffff" opacity="0.6"/>
+
+  <!-- 닭가슴살 큐브 -->
+  <rect x="180" y="130" width="22" height="18" rx="4" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5"/>
+  <rect x="205" y="145" width="20" height="18" rx="4" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+  <rect x="155" y="160" width="24" height="16" rx="4" fill="#ffedd5" stroke="#fb923c" stroke-width="1.5"/>
+  <rect x="195" y="115" width="22" height="17" rx="4" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+
+  <!-- 올리브 & 드레싱 -->
+  <ellipse cx="130" cy="165" rx="7" ry="5" fill="#1e293b"/>
+  <ellipse cx="220" cy="170" rx="6" ry="4" fill="#1e293b"/>
+  <path d="M 140,145 Q 180,135 220,155" stroke="#fef08a" stroke-width="3" fill="none" opacity="0.8"/>
+
+  <!-- 타이틀 뱃지 -->
+  <rect x="20" y="20" width="165" height="34" rx="17" fill="#FF5500"/>
+  <text x="102" y="42" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">샘플: 닭가슴살 샐러드</text>
+</svg>
+

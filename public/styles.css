@@ -1,0 +1,1163 @@
+/* ==============================================================================
+   CaloView (칼로리뷰) 메인 스타일시트
+   - 기본 배경: 화이트 테마 (Light Mode 기본)
+   - Primary Color: Vibrant Orange (#FF5500 / #FF4500)
+   - 총 칼로리 상단 대형 강조 + 하단 탄단지 3열 그리드 구조
+   - '트레이너의 한마디' 전용 코칭 카드 레이아웃
+   ============================================================================== */
+
+:root {
+  /* Vibrant Orange 브랜드 테마 */
+  --primary: #FF5500;
+  --primary-hover: #E04B00;
+  --primary-light: rgba(255, 85, 0, 0.08);
+  --primary-glow: rgba(255, 85, 0, 0.25);
+  
+  /* 매크로 영양소 컬러 */
+  --carb-color: #3b82f6;   /* 탄수화물: 블루 */
+  --protein-color: #10b981;/* 단백질: 에메랄드 */
+  --fat-color: #f59e0b;    /* 지방: 앰버 */
+
+  /* 기본 화이트 테마 변수 (Light Mode) */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-sub: #f1f5f9;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-sub: #64748b;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+}
+
+/* 다크 테마 변수 (다크 모드 토글 시) */
+[data-theme="dark"] {
+  --bg-main: #09090b;
+  --bg-card: #121214;
+  --bg-card-sub: #18181b;
+  --border-color: #27272a;
+  --border-hover: #3f3f46;
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --text-sub: #71717a;
+  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  --primary-light: rgba(255, 85, 0, 0.12);
+  --primary-glow: rgba(255, 85, 0, 0.35);
+}
+
+/* 기본 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
+}
+
+/* 배경 장식용 팝 기하학 도형 */
+.pop-decor-blob1 {
+  position: fixed;
+  top: -120px;
+  right: -100px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pop-decor-blob2 {
+  position: fixed;
+  bottom: -150px;
+  left: -120px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 85, 0, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==============================================================================
+   헤더 (Header)
+   ============================================================================== */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 32px;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--primary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #fff;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  transform: rotate(-3deg);
+  transition: transform 0.2s ease;
+}
+
+.brand-logo-icon:hover {
+  transform: rotate(3deg) scale(1.05);
+}
+
+.brand-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.brand-title span {
+  color: var(--primary);
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-switch {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-btn.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.theme-toggle-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: 20px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--primary);
+}
+
+/* ==============================================================================
+   히어로 배너 (Hero Section)
+   ============================================================================== */
+.hero-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.pop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 85, 0, 0.3);
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ==============================================================================
+   카드 컴포넌트 공통
+   ============================================================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+/* ==============================================================================
+   업로드 섹션 (Dropzone)
+   ============================================================================== */
+.dropzone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-card-sub);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dropzone-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.dropzone-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.dropzone-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.preview-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.preview-img-wrapper {
+  position: relative;
+  max-width: 320px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--primary);
+}
+
+.preview-img {
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.btn-change-img {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-change-img:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 샘플 프리셋 버튼 목록 */
+.sample-presets {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sample-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.btn-sample {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.btn-sample:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* 텍스트 힌트 입력창 */
+.hint-group {
+  margin-top: 20px;
+}
+
+.hint-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.hint-textarea {
+  width: 100%;
+  height: 70px;
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 14px;
+  color: var(--text-main);
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.hint-textarea:focus {
+  border-color: var(--primary);
+}
+
+.hint-counter {
+  text-align: right;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+/* 메인 분석 버튼 */
+.btn-primary-action {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px var(--primary-glow);
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.btn-primary-action:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-primary-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==============================================================================
+   분석 결과 카드 섹션 (Result Section)
+   ============================================================================== */
+.result-section {
+  display: none;
+}
+
+.result-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
+  box-shadow: 0 12px 36px var(--primary-glow);
+}
+
+.result-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.food-title-group h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.food-portion {
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.food-portion span {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.confidence-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(255, 85, 0, 0.4);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==============================================================================
+   [수정 요구사항 4 반영]
+   총 칼로리 상단 대형 강조 카드 + 하단 탄단지 3열 그리드
+   ============================================================================== */
+.nutrition-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+/* 1. 총 칼로리 대형 박스 (Hero) */
+.calorie-hero-box {
+  background: linear-gradient(135deg, rgba(255, 85, 0, 0.12) 0%, var(--bg-card-sub) 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 18px var(--primary-glow);
+}
+
+.calorie-hero-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.calorie-hero-value {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--text-main);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.calorie-hero-unit {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* 2. 하단 탄수화물/단백질/지방 3열 그리드 */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.macro-box {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 18px 12px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.macro-box:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+}
+
+.macro-box.carb { border-top: 4px solid var(--carb-color); }
+.macro-box.protein { border-top: 4px solid var(--protein-color); }
+.macro-box.fat { border-top: 4px solid var(--fat-color); }
+
+.macro-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.macro-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.macro-unit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-left: 2px;
+}
+
+/* 영양 매크로 비율 프로그레스 바 */
+.macro-progress-wrapper {
+  margin-bottom: 24px;
+}
+
+.macro-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-card-sub);
+  margin-bottom: 8px;
+}
+
+.macro-bar-carb {
+  background: var(--carb-color);
+  transition: width 0.3s ease;
+}
+
+.macro-bar-protein {
+  background: var(--protein-color);
+  transition: width 0.3s ease;
+}
+
+.macro-bar-fat {
+  background: var(--fat-color);
+  transition: width 0.3s ease;
+}
+
+.macro-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-carb { background: var(--carb-color); }
+.dot-protein { background: var(--protein-color); }
+.dot-fat { background: var(--fat-color); }
+
+/* 도출 근거 */
+.analysis-reason-box {
+  background: var(--bg-card-sub);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px var(--radius-sm) var(--radius-sm) 4px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.reason-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reason-text {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ==============================================================================
+   [수정 요구사항 2 반영]
+   '트레이너의 한마디' 전용 코칭 카드 레이아웃
+   ============================================================================== */
+.trainer-card-box {
+  background: var(--bg-card-sub);
+  border: 1px solid rgba(255, 85, 0, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.trainer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.trainer-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trainer-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.trainer-speech-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-main);
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.trainer-speech-bubble::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 28px;
+  width: 14px;
+  height: 14px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  transform: rotate(45deg);
+}
+
+/* 결과 액션 버튼 그룹 */
+.result-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn-action-sub {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-action-sub:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ==============================================================================
+   오늘의 섭취 대시보드 (Daily Summary)
+   ============================================================================== */
+.dash-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dash-target-badge {
+  font-size: 13px;
+  background: var(--bg-card-sub);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.dash-target-badge strong {
+  color: var(--primary);
+}
+
+.calorie-meter-container {
+  margin-bottom: 20px;
+}
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.meter-bar {
+  height: 16px;
+  background: var(--bg-card-sub);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, var(--primary));
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.meter-fill.overflow {
+  background: #ef4444;
+}
+
+.meal-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.meal-timeline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-card-sub);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.timeline-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timeline-tag {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.timeline-food {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.timeline-cal {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.btn-remove-meal {
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.btn-remove-meal:hover {
+  color: #ef4444;
+}
+
+.empty-timeline {
+  text-align: center;
+  padding: 30px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* ==============================================================================
+   Supabase 피드백 섹션
+   ============================================================================== */
+.feedback-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 12px;
+}
+
+.input-field {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+}
+
+.star-rating-select {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-sub);
+  transition: color 0.15s;
+}
+
+.star-btn.active {
+  color: #f59e0b;
+}
+
+.btn-submit-feedback {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit-feedback:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.feedback-item {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.fb-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.fb-nick {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.fb-stars {
+  color: #f59e0b;
+}
+
+.fb-comment {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ==============================================================================
+   토스트 팝업 (Toast Notification)
+   ============================================================================== */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  color: var(--text-main);
+  padding: 14px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastFadeIn 0.3s ease, toastFadeOut 0.3s ease 3.7s forwards;
+}
+
+.toast.error {
+  border-color: #ef4444;
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* ==============================================================================
+   모달 팝업
+   ============================================================================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.btn-close-modal:hover {
+  color: var(--text-main);
+}
+
+.meal-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-slot-choice {
+  background: var(--bg-card-sub);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-slot-choice:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* ==============================================================================
+   반응형 브레이크포인트
+   ============================================================================== */
+@media (max-width: 768px) {
+  .result-actions {
+    grid-template-columns: 1fr;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .star-rating-select {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .macro-grid {
+    grid-template-columns: 1fr;
+  }
+  .calorie-hero-value {
+    font-size: 42px;
+  }
+}

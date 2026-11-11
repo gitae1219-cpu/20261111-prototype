@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>칼로리뷰 (CaloView) - AI 식단 분석 & 트레이너 한마디</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+  
+  <!-- Google Fonts Pretendard CDN -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- HTML2Canvas CDN (결과 카드 이미지 저장용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- 메인 스타일시트 -->
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <!-- 배경 팝 그래픽 장식 -->
+  <div class="pop-decor-blob1" aria-hidden="true"></div>
+  <div class="pop-decor-blob2" aria-hidden="true"></div>
+
+  <!-- 상단 토스트 팝업 컨테이너 (오류 및 알림 표시) -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <div class="container">
+    
+    <!-- 1. 헤더 영역 (로고, 다국어 전환, 테마 토글) -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo-icon" aria-hidden="true">🔥</div>
+        <div>
+          <h1 class="brand-title">Calo<span>View</span></h1>
+          <p class="brand-sub" data-i18n="brand_sub">AI 식단 분석 & 트레이너 한마디</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- 다국어 스위처 -->
+        <div class="lang-switch" role="group" aria-label="Language Switcher">
+          <button type="button" id="lang-ko" class="lang-btn active" aria-label="한국어로 변경">KR</button>
+          <button type="button" id="lang-en" class="lang-btn" aria-label="Change to English">EN</button>
+        </div>
+
+        <!-- 다크 / 라이트 테마 토글 -->
+        <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="테마 전환">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-text" data-i18n="theme_toggle_light">라이트 모드</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- 2. 히어로 소개 섹션 -->
+      <section class="hero-section">
+        <div class="pop-badge" data-i18n="hero_badge">✨ AI 멀티모달 식단 전체 분석</div>
+        <h2 class="hero-title" data-i18n="hero_title">오늘 먹은 식단, 사진 한 장으로 끝!</h2>
+        <p class="hero-desc" data-i18n="hero_desc">
+          OpenAI Vision AI가 사진 속 음식 전체의 양과 칼로리, 탄단지를 정밀 분석하고 트레이너의 따뜻한 조언을 전달합니다.
+        </p>
+      </section>
+
+      <!-- 3. 업로드 및 드롭존 섹션 (F-01, F-04, F-10) -->
+      <section class="card upload-section" aria-label="식단 사진 업로드">
+        <!-- 숨겨진 파일 인풋 -->
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" style="display: none;" />
+
+        <!-- 드롭존 영역 -->
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="이미지 업로드 드롭존">
+          <!-- 초기 기본 상태 -->
+          <div id="dropzone-default" class="dropzone-content">
+            <div class="dropzone-icon">📷</div>
+            <p class="dropzone-title" data-i18n="upload_drop_title">음식 사진을 드래그하거나 클릭하여 업로드</p>
+            <p class="dropzone-sub" data-i18n="upload_drop_sub">또는 화면 아무 곳에서 Ctrl+V 로 이미지를 붙여넣으세요 (최대 10MB)</p>
+          </div>
+
+          <!-- 이미지 선택 후 미리보기 상태 -->
+          <div id="preview-container" class="preview-container">
+            <div class="preview-img-wrapper">
+              <img id="preview-img" class="preview-img" src="" alt="업로드된 음식 미리보기" />
+            </div>
+            <button type="button" id="btn-change-img" class="btn-change-img" data-i18n="upload_change_btn">다른 사진 선택</button>
+          </div>
+        </div>
+
+        <!-- 빠른 샘플 테스트 버튼 (TC-03) -->
+        <div class="sample-presets">
+          <span class="sample-label" data-i18n="sample_label">또는 빠른 샘플로 테스트:</span>
+          <button type="button" class="btn-sample" data-sample="bossam" data-i18n="sample_bossam">🍖 보쌈 정식</button>
+          <button type="button" class="btn-sample" data-sample="salad" data-i18n="sample_salad">🥗 닭가슴살 샐러드</button>
+          <button type="button" class="btn-sample" data-sample="pizza" data-i18n="sample_pizza">🍕 페퍼로니 피자</button>
+        </div>
+
+        <!-- 텍스트 힌트 입력창 (F-04) -->
+        <div class="hint-group">
+          <label for="text-hint" class="hint-label" data-i18n="hint_label">✍️ 추가 메모 (선택사항 - 양이 많거나 특별한 점을 적어주세요)</label>
+          <textarea id="text-hint" class="hint-textarea" maxlength="2000" data-i18n-ph="hint_placeholder" placeholder="예: 밥은 두 공기 분량이고 고기 양이 평소보다 훨씬 많았어"></textarea>
+          <div class="hint-counter"><span id="hint-char-count">0</span> / 2000</div>
+        </div>
+
+        <!-- 분석 시작 버튼 -->
+        <button type="button" id="btn-analyze" class="btn-primary-action" data-i18n="analyze_btn">
+          🚀 AI 영양 분석 시작하기
+        </button>
+      </section>
+
+      <!-- 4. 분석 결과 카드 섹션 -->
+      <section id="result-section" class="result-section" aria-label="AI 분석 결과">
+        <div id="exportable-card" class="card result-card">
+          
+          <!-- 카드 헤더 (음식명 & 추정 섭취 총량 & 신뢰도 뱃지) -->
+          <div class="result-header">
+            <div class="food-title-group">
+              <h2 id="result-food-name">-</h2>
+              <p class="food-portion"><span data-i18n="label_portion">추정 섭취 총량:</span> <strong id="result-portion">-</strong></p>
+            </div>
+            <div class="confidence-badge">
+              <span id="result-confidence">🎯 신뢰도: --%</span>
+            </div>
+          </div>
+
+          <!-- [수정 요구사항 4 반영]
+               총 칼로리 상단 대형 강조 박스 + 하단 탄수화물/단백질/지방 3열 그리드 -->
+          <div class="nutrition-container">
+            <!-- 총 칼로리 대형 박스 -->
+            <div class="calorie-hero-box">
+              <p class="calorie-hero-label" data-i18n="label_calories">총 칼로리</p>
+              <div class="calorie-hero-value">
+                <span id="val-calories">0</span>
+                <span class="calorie-hero-unit" data-i18n="label_calories_unit">kcal</span>
+              </div>
+            </div>
+
+            <!-- 하단 탄단지 3열 그리드 -->
+            <div class="macro-grid">
+              <div class="macro-box carb">
+                <p class="macro-label" data-i18n="label_carbs">탄수화물</p>
+                <p class="macro-value"><span id="val-carbs">0</span><span class="macro-unit">g</span></p>
+              </div>
+              <div class="macro-box protein">
+                <p class="macro-label" data-i18n="label_protein">단백질</p>
+                <p class="macro-value"><span id="val-protein">0</span><span class="macro-unit">g</span></p>
+              </div>
+              <div class="macro-box fat">
+                <p class="macro-label" data-i18n="label_fat">지방</p>
+                <p class="macro-value"><span id="val-fat">0</span><span class="macro-unit">g</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 탄단지 비율 프로그레스 바 -->
+          <div class="macro-progress-wrapper">
+            <div class="macro-bar">
+              <div id="bar-carb" class="macro-bar-carb" style="width: 33%;"></div>
+              <div id="bar-protein" class="macro-bar-protein" style="width: 33%;"></div>
+              <div id="bar-fat" class="macro-bar-fat" style="width: 34%;"></div>
+            </div>
+            <div class="macro-legend">
+              <span class="legend-item"><span class="legend-dot dot-carb"></span><span data-i18n="label_carbs">탄수화물</span> <span id="pct-carbs">0%</span></span>
+              <span class="legend-item"><span class="legend-dot dot-protein"></span><span data-i18n="label_protein">단백질</span> <span id="pct-protein">0%</span></span>
+              <span class="legend-item"><span class="legend-dot dot-fat"></span><span data-i18n="label_fat">지방</span> <span id="pct-fat">0%</span></span>
+            </div>
+          </div>
+
+          <!-- 도출 근거 설명 (F-09) -->
+          <div class="analysis-reason-box">
+            <p class="reason-title" data-i18n="label_reason">💡 AI 영양 도출 근거 (음식 전체 기준)</p>
+            <p id="result-reason" class="reason-text">-</p>
+          </div>
+
+          <!-- [수정 요구사항 2 반영]
+               '트레이너의 한마디' 전용 코칭 카드 (기타 탭 삭제 및 칼로리/음식양 반영 피드백) -->
+          <div class="trainer-card-box">
+            <div class="trainer-card-header">
+              <div class="trainer-title" data-i18n="review_title">🏋️ 트레이너의 한마디</div>
+              <span class="trainer-badge" data-i18n="review_badge">칼로리 & 음식량 반영 코칭</span>
+            </div>
+            <div id="review-display" class="trainer-speech-bubble">
+              "식단 사진을 분석하면 트레이너가 음식의 양과 칼로리를 고려한 든든한 조언을 남겨드립니다."
+            </div>
+          </div>
+
+          <!-- 결과 액션 버튼 (대시보드 추가, 이미지 저장, 공유) -->
+          <div class="result-actions">
+            <button type="button" id="btn-open-meal-modal" class="btn-action-sub" data-i18n="btn_add_dashboard">
+              ➕ 오늘의 식단에 추가
+            </button>
+            <button type="button" id="btn-save-card" class="btn-action-sub" data-i18n="btn_save_image">
+              🖼️ 결과 카드 이미지 저장
+            </button>
+            <button type="button" id="btn-share-text" class="btn-action-sub" data-i18n="btn_copy_share">
+              🔗 공유 문구 복사
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 5. 오늘의 섭취 대시보드 (F-06 Daily Summary) -->
+      <section class="dash-card" aria-label="오늘의 식단 요약 대시보드">
+        <div class="dash-header">
+          <h2 class="dash-title" data-i18n="dash_title">📅 오늘의 식단 요약 대시보드</h2>
+          <div class="dash-target-badge">
+            <span data-i18n="dash_target_label">하루 권장 목표 칼로리:</span> <strong>2000 kcal</strong>
+          </div>
+        </div>
+
+        <!-- 칼로리 게이지 미터 -->
+        <div class="calorie-meter-container">
+          <div class="meter-labels">
+            <span><span data-i18n="dash_consumed">오늘 섭취량</span>: <strong id="dash-total-cal">0</strong> kcal</span>
+            <span><span data-i18n="dash_remaining">남은 칼로리</span>: <strong id="dash-remain-cal">2000</strong> kcal</span>
+          </div>
+          <div class="meter-bar">
+            <div id="meter-fill" class="meter-fill"></div>
+          </div>
+        </div>
+
+        <!-- 식단 타임라인 목록 -->
+        <div id="meal-timeline" class="meal-timeline-list">
+          <p id="timeline-empty" class="empty-timeline" data-i18n="dash_empty">
+            아직 등록된 식단이 없습니다. 위에서 분석 후 추가해 보세요!
+          </p>
+        </div>
+
+        <button type="button" id="btn-reset-dashboard" class="btn-action-sub" style="margin-top: 10px;" data-i18n="dash_reset_btn">
+          대시보드 초기화
+        </button>
+      </section>
+
+      <!-- 6. Supabase 익명 피드백 섹션 (F-08) -->
+      <section class="card feedback-card" aria-label="커뮤니티 익명 피드백">
+        <h2 class="feedback-title" data-i18n="feedback_title">⭐ 서비스 익명 피드백 (Supabase 실시간 연동)</h2>
+        <p class="brand-sub" style="margin-bottom: 16px;" data-i18n="feedback_sub">
+          로그인 없이 자유롭게 별점과 한줄 소감을 남겨주세요!
+        </p>
+
+        <!-- 피드백 작성 폼 -->
+        <form id="feedback-form" class="feedback-form">
+          <div class="form-row">
+            <input type="text" id="fb-nickname" class="input-field" maxlength="50" data-i18n-ph="fb_nick_ph" placeholder="익명 (선택사항)" />
+            
+            <div class="star-rating-select" id="star-rating" role="radiogroup" aria-label="별점 선택">
+              <button type="button" class="star-btn active" data-score="1" aria-label="1점">★</button>
+              <button type="button" class="star-btn active" data-score="2" aria-label="2점">★</button>
+              <button type="button" class="star-btn active" data-score="3" aria-label="3점">★</button>
+              <button type="button" class="star-btn active" data-score="4" aria-label="4점">★</button>
+              <button type="button" class="star-btn active" data-score="5" aria-label="5점">★</button>
+            </div>
+          </div>
+
+          <input type="text" id="fb-comment" class="input-field" maxlength="500" required data-i18n-ph="fb_comment_ph" placeholder="서비스 사용 후기나 개선할 점을 적어주세요" />
+
+          <button type="submit" id="btn-submit-fb" class="btn-submit-feedback" data-i18n="fb_submit_btn">
+            피드백 남기기
+          </button>
+        </form>
+
+        <!-- 피드백 최신 목록 노출 영역 -->
+        <h3 style="font-size: 15px; margin-bottom: 12px;" data-i18n="fb_list_title">최신 사용자 피드백</h3>
+        <div id="feedback-list" class="feedback-list">
+          <p id="feedback-empty" class="empty-timeline" data-i18n="fb_empty_list">
+            아직 등록된 피드백이 없습니다. 첫 피드백의 주인공이 되어보세요!
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer style="text-align: center; margin-top: 40px; font-size: 13px; color: var(--text-sub);">
+      <p>© 2026 CaloView. Powered by OpenAI Vision & Supabase.</p>
+    </footer>
+  </div>
+
+  <!-- 식사 시간대 선택 모달 (아침/점심/저녁/간식 - ESC 닫기 지원 TC-10) -->
+  <div id="meal-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title">식사 시간대 선택</h3>
+        <button type="button" id="btn-close-modal" class="btn-close-modal" aria-label="모달 닫기">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+        현재 분석된 식단을 어느 시간대에 기록할까요?
+      </p>
+      <div class="meal-slot-grid">
+        <button type="button" class="btn-slot-choice" data-slot="breakfast">
+          <span>🌅 아침</span>
+        </button>
+        <button type="button" class="btn-slot-choice" data-slot="lunch">
+          <span>☀️ 점심</span>
+        </button>
+        <button type="button" class="btn-slot-choice" data-slot="dinner">
+          <span>🌙 저녁</span>
+        </button>
+        <button type="button" class="btn-slot-choice" data-slot="snack">
+          <span>🍪 간식</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 애플리케이션 스크립트 모듈 로드 -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
